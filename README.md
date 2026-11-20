@@ -1,23 +1,12 @@
 🍕 Pizza Sales Dashboard 
-An end-to-end Excel analytics project: raw pizza sales data is cleaned with Power Query, modeled with Power Pivot (star schema), analyzed with Pivot Tables, and presented in an interactive dashboard with KPIs, charts and slicers.
-<img width="655" height="293" alt="لقطة شاشة 2026-11-20 180128" src="https://github.com/user-attachments/assets/ce2dcb27-4cb4-4f13-8e76-65399db56bbe" />
-
+An end-to-end Excel analytics project: raw pizza order data is cleaned with Power Query, modeled as a star schema in Power Pivot, summarized with Pivot Tables, and presented in an interactive dashboard with KPI cards, charts, and slicers.
 ---
-📌 Table of Contents
-Project Overview
-Business Questions
-Tools & Skills
-Project Workflow
-Stage 1: Data Cleaning (Power Query)
-Stage 2: Data Modeling (Power Pivot – Star Schema)
-Stage 3: Analysis (Pivot Tables)
-Stage 4: Dashboard (Source Code Layer)
-Key Insights
-Repository Structure
-How to Use
----
-📖 Project Overview
-The goal of this project is to turn raw pizza order data into a clear, interactive dashboard that helps a business owner monitor sales performance, understand customer ordering behavior, and identify best- and worst-selling products.
+📌 Project Overview
+Item	Detail
+Tool	Microsoft Excel (Power Query, Power Pivot, Pivot Tables, Slicers, Timeline)
+Period	2015 (monthly / weekly analysis)
+Goal	Understand sales performance by category, size, product, month and weekday
+Output	Single-page interactive dashboard
 Headline KPIs
 KPI	Value
 Total Sales	$8,436
@@ -25,88 +14,88 @@ Total Quantity	511
 Total Orders	499
 Total Customers	499
 ---
-❓ Business Questions
-How much revenue is generated, and from which pizza categories (Classic, Veggie, Supreme, Chicken)?
-Which pizza sizes (S, M, L, XL) drive the most sales?
-Which months and weekdays have the highest order volume?
-What are the Top 5 and Bottom 5 best-selling pizzas?
----
-🛠 Tools & Skills
-Microsoft Excel
-Power Query: ETL / data cleaning
-Power Pivot (Data Model): relationships, star schema
-DAX / Measures: Sum of Sales, Count of Orders, Count of Customers
-Pivot Tables & Pivot Charts
-Slicers & Timeline: interactive filtering
-Dashboard design: KPI cards, layout, formatting
----
-🔄 Project Workflow
+🔄 Workflow
 ```
-Raw Data → Power Query (Clean) → Power Pivot (Star Schema) → Pivot Tables → Dashboard
+Raw Data → Power Query (Cleaning) → Power Pivot (Star Schema + DAX) → Pivot Tables → Dashboard
 ```
-Stage 1: Data Cleaning (Power Query)
+---
+1️⃣ Data Cleaning (Power Query)
 The raw data was loaded into Power Query and prepared before modeling:
-Import the source data into Power Query.
-Inspect each column's profile (errors, empty values, distribution).
-Fix data types: dates as `Date`, quantities and prices as numbers, IDs as text/whole numbers.
-Handle nulls and duplicates: remove duplicate rows and treat missing values.
-Standardize text: trim spaces and fix inconsistent casing in names, categories and sizes.
-Split the data into logical tables (see star schema below) by separating customer, product and order attributes.
-Derive date attributes from the order date: Month (with numeric prefix such as `01-January` so months sort correctly), Weekday, Quarter.
-Calculate Sales per row (quantity × price) where needed.
-Rename columns to clear, consistent names (`order_id`, `pizza_category`, `pizza_size`, `order_date`, ...).
-Load to the Data Model (connection only) instead of to worksheets for better performance.
-> ✏️ _Adjust the steps above to match exactly what you applied in your query._
-Stage 2: Data Modeling (Power Pivot – Star Schema)
-The cleaned tables were loaded into the Excel Data Model and connected as a star schema:
-Fact table: order/sales transactions (order ID, quantity, sales, and foreign keys).
-Dimension tables: Customers, Products (name, category, size), Dates.
-Relationships: one-to-many from each dimension to the fact table (single-direction filtering).
-Why a star schema? It gives faster pivot performance, simpler measures, and clean filtering from slicers across all visuals.
-Measures created
-`Sum of Sales`
-`Count of order_id` (total orders)
-`Count of Customer Name` (total customers)
-Total Quantity
-Stage 3: Analysis (Pivot Tables)
-Pivot tables were built from the Data Model, each feeding one dashboard visual:
-Pivot Table	Fields	Used For
-Sales by Category	Category → Sum of Sales	Donut chart
-Sales by Size	Size → Sum of Sales	Pie chart
-Orders by Month	Month → Count of order_id	Line chart (monthly peaks)
-Orders by Weekday	Weekday → Count of order_id	Column chart
-Top 5 Pizzas	Pizza Name → Sum of Sales (Top 5 filter)	Bar chart
-Bottom 5 Pizzas	Pizza Name → Sum of Sales (Bottom 5 filter)	Bar chart
-KPI cards	Total sales, quantity, orders, customers	Header KPIs
-<img width="365" height="299" alt="لقطة شاشة 2026-11-20 180202" src="https://github.com/user-attachments/assets/a0e62253-1b99-4fb9-8d21-72ddc579a28a" />
-
-Stage 4: Dashboard (Source Code Layer)
-The dashboard sheet is built entirely from the pivot tables above, with no hard-coded values:
-KPI header linked to the pivot results (Total Sales, Quantity, Orders, Customers).
-Pivot charts created from each pivot table:
-Donut: Total Sales per Category
-Pie: Sales Distribution by Pizza Size
-Line: Monthly Order Volume
-Column: Weekly Order Distribution
-Bar: Top 5 / Bottom 5 Best-Selling Pizzas
-Slicers (`pizza_category`, `pizza_size`) and a Timeline (`order_date`) connected to all pivot tables via Report Connections, so one click filters the whole dashboard.
-Formatting: gridlines hidden, consistent color palette (red/orange), data labels, rounded card-style panels, and a clean layout.
+Import the source tables (orders, order details, pizzas, customers) into the Power Query Editor.
+Promote headers and make sure column names are clear and consistent (e.g., `order_id`, `order_date`, `pizza_category`, `pizza_size`).
+Fix data types: dates as `Date`, quantities as `Whole Number`, prices and sales as `Decimal Number`, text fields as `Text`.
+Remove duplicates and empty rows, and handle `null` / missing values.
+Trim and clean text (extra spaces, inconsistent casing) in pizza names, categories, and sizes.
+Split / derive columns from the order date: `Month` (numbered, e.g. `01-January` so months sort correctly) and `Weekday`.
+Create calculated columns such as `Sales = Quantity × Price`.
+Merge / join queries where needed to build clean dimension tables (pizza details, customers, dates).
+Load to the Data Model (connection only / Data Model) instead of loading to worksheets, to keep the file light.
 ---
-💡 Key Insights
-Veggie (28%) and Classic (27%) lead sales by category, followed by Supreme (24%) and Chicken (21%).
-Large pizzas generate 48% of sales; XL contributes only 3%.
-Order volume peaks in June (54 orders) and is lowest in March (30).
-Friday is the busiest day (91 orders); Wednesday is the slowest (48).
-Every order in the dataset maps to a unique customer (499 orders / 499 customers).
+2️⃣ Data Modeling (Power Pivot)
+The cleaned tables were loaded into the Excel Data Model and organized as a star schema:
+Fact table: order details (order_id, pizza_id, quantity, sales, order_date)
+Dimension tables:
+Pizza (name, category, size, price)
+Customers (customer name)
+Date / Calendar (date, month, weekday, quarter, year)
+Relationships were created in Diagram View as one-to-many (dimension → fact) with single-direction filtering.
+Measures (DAX) used across the pivot tables and dashboard:
+```DAX
+Total Sales      = SUM ( FactOrders[Sales] )
+Total Quantity   = SUM ( FactOrders[Quantity] )
+Total Orders     = DISTINCTCOUNT ( FactOrders[order_id] )
+Total Customers  = DISTINCTCOUNT ( Customers[Customer Name] )
+```
+3️⃣ Pivot Tables
+All pivot tables are built from the Data Model, so one set of slicers controls everything:
+Pivot Table	Fields	Purpose
+KPI cards	Sales, Quantity, Orders, Customers	Headline numbers
+Sales by Category	`pizza_category` → Sum of Sales	Category contribution
+Sales by Size	`pizza_size` → Sum of Sales	Size distribution
+Monthly Orders	`Month` → Count of `order_id`	Seasonality / peak months
+Weekly Orders	`Weekday` → Count of `order_id`	Busiest days
+Top 5 Pizzas	`pizza_name` → Sum of Sales (Value Filter: Top 5)	Best sellers
+Bottom 5 Pizzas	`pizza_name` → Sum of Sales (Value Filter: Bottom 5)	Weakest sellers
+<img width="365" height="299" alt="لقطة شاشة 2026-11-20 180202" src="https://github.com/user-attachments/assets/627e0692-2cf1-4dda-9271-6af2d928a834" />
+
+---
+4️⃣ Dashboard
+The dashboard sheet is built from PivotCharts linked to the pivot tables above, with a clean layout: title banner, KPI cards, chart cards, and a filter panel.
+Visuals
+KPI cards: Total Sales, Total Quantity, Total Orders, Total Customers
+Total Sales per Category (doughnut)
+Sales Distribution by Pizza Size (pie)
+Monthly Order Volume (line chart with markers and data labels)
+Weekly Order Distribution (column chart)
+Top 5 / Bottom 5 Best-Selling Pizzas (bar charts)
+Interactivity
+Slicers: `pizza_category`, `pizza_size`
+Timeline: `order_date` (by quarters)
+All slicers and the timeline are connected to every pivot table via Report Connections.
+<img width="655" height="293" alt="لقطة شاشة 2026-11-20 180128" src="https://github.com/user-attachments/assets/9c099541-6362-48e9-ba18-059a61ec7e6d" />
+
+---
+🔍 Key Insights
+Category mix is balanced: Veggie (28%) and Classic (27%) lead, followed by Supreme (24%) and Chicken (21%).
+Large pizzas dominate: Size L generates 48% of sales, M 27%, S 22%, and XL only 3%.
+Peak month is June with 54 orders, while March is the slowest with 30 orders; orders rise from April and stay high through summer.
+Friday is the busiest day (91 orders) and Wednesday the slowest (48 orders).
+Best seller: The Classic Deluxe Pizza, followed by The Four Cheese Pizza and The Thai Chicken Pizza.
+Weakest seller: The Brie Carre Pizza, followed by The Spinach Supreme Pizza and The Chicken Alfredo Pizza.
+Each order maps to a unique customer (499 orders = 499 customers), so there is no repeat-customer behavior in this dataset.
+---
+💡 Recommendations
+Promote mid-week offers (especially Wednesday) to lift the slowest day.
+Add combo deals pairing weak sellers with best sellers.
+Review the XL size pricing / positioning given its low share.
+Prepare extra stock and staff for Fridays and the May–September peak.
 ---
 📁 Repository Structure
 ```
-Pizza-Sales-Excel-Dashboard/
-├── Pizza_Sales_Dashboard.xlsx   # Final workbook (data model, pivots, dashboard)
-├── data/                        # Raw source data
+├── Pizza_Sales_Dashboard.xlsx   # Source file (Power Query, Data Model, Pivots, Dashboard)
 ├── images/
-│   ├── dashboard.png
-│   ├── pivot_tables.png
-│   └── star_schema.png
+│   ├── star-schema.png
+│   ├── pivot-tables.png
+│   └── dashboard.png
 └── README.md
 ```
