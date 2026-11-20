@@ -1,5 +1,4 @@
-🍕 Pizza Sales Dashboard 
-
+🍕 Pizza Sales Dashboard                   
 An end-to-end Excel analytics project: raw pizza order data is cleaned with Power Query, modeled as a star schema in Power Pivot, summarized with Pivot Tables, and presented in an interactive dashboard with KPI cards, charts, and slicers.
 ---
 📌 Project Overview
